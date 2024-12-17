@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <%- include('./partials/head'); %>
+</head>
+
+<body>
+	<div class="container">
+
+	<header>
+		<%- include('./partials/header'); %>
+	</header>
+
+	<main>
+
+		<!-- <div class="card my-5" style= "border-radius: 1em; background-color: gainsboro;"> -->
+		<div class="card my-4" style="border: solid blue 1px;">
+
+        <!-- div class="card-body py-4 px-4 px-md-5"> -->
+		<div class="card-body">
+
+		<!-- nav bar -->
+		<ul class="nav nav-tabs">
+		  <li class="nav-item">
+			<a class="nav-link active" aria-current="page" href="#"><span class="px-2">Login</span></a>
+		  </li>
+		  <li class="nav-item">
+			<a class="nav-link" href="/register"><span class="px-2">Register</span></a>
+		  </li>		  
+		</ul>
+
+		<div class="card mx-5 my-5" style="border: none;">
+
+		<!---- Error message, or message ---->
+
+		<% if (typeof error !== 'undefined' && error !== null) { %>
+			<p class="alert alert-danger"><%= error %></p>
+		<% } %>
+		
+		<% if (typeof message !== 'undefined' && message !== null && JSON.stringify(message) != '{}') { %>
+			<p class="alert alert-success"><%= message %>%></p>
+		<% } %>
+
+		<!-------------------------------------------------->
+
+		<h1 class="mb-4">Login</h1>
+
+		<form action="/login" method="POST">
+
+			<card class="w-75 mx-auto row mb-3" style= "background-color: gainsboro; border-radius: .5em;">
+				<div class="col-md-6 px-5 py-3">
+					<label for="username" class="form-label">Username</label>
+					<input tabindex="10" type="text" class="form-control" name="username" id="username" required="yes" />
+				</div>
+
+				<div class="col-md-6 px-5 py-3">
+					<label for="password" class="form-label">Password</label>
+					<input tabindex="20" type="password" class="form-control" name="password" id="password" required="yes" / >
+				</div>
+			</card>
+
+			<div class="text-end" style="width: 85%">
+				<button tabindex="30" class="btn btn-primary" type="submit" id="loginButton" >Login</button></div>
+			</div>
+
+		</form>
+
+		</card>
+
+    </div> <!-- card-body -->
+    </div> <!-- card -->
+	</main>
+
+	<footer>
+		<%- include('./partials/footer'); %>
+	</footer>
+
+
+	</div> <!-- container -->
+
+</body>
+
+<script>
+	document.getElementById('username').focus();
+</script>
+
+</html>

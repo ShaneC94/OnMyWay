@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Display City Weather</title>
+    <%- include('./partials/head'); %>
+</head>
+
+<body>
+    <div class="container">
+               
+        <header>
+            <%- include('./partials/header'); %>
+        </header>
+
+        <main>
+            <!-- Main card for weather information -->
+            <div class="card my-4" style="border: solid blue 1px;">
+
+            <div class="card-body">
+
+                <!-- Navigation tabs -->
+                <ul class="nav nav-tabs mb-1">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/passenger/dashboard"><span class="px-2">Passenger&nbsp;&nbsp;&nbsp;</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/driver/dashboard"><span class="px-2">Driver&nbsp;&nbsp;&nbsp;</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/weather/select"><span class="px-2">Weather&nbsp;&nbsp;&nbsp;</span></a>
+                    </li>
+
+                    <!-- Logout tab -->
+                    <li class="nav-item ms-auto">
+                        <a class="nav-link" href="/logout"><span class="px-2">Logout</span></a>
+                    </li>
+                </ul>
+
+                <div class="text-end">User Name: <%= locals.username %></div>
+
+                <!-- Inner card for weather data -->
+                <div class="card mx-4 mb-3" style="border: none;">
+
+                <!-- Flash message for success -->
+                <% if (message && message.message) { %>
+                <div class="alert alert-success">
+                    <%= message.message %>
+                </div>
+                <% } %>
+                
+                <!-- Flash message for errors -->
+                <% if (message && message.error) { %>
+                <div class="alert alert-danger">
+                    <%= message.error %>
+                </div>
+                <% } %>
+
+                <!-- System error message -->
+                <% if (typeof error !== 'undefined' && error !== null) { %>
+                    <p class="alert alert-danger"><%= error %></p>
+                <% } %>
+
+                <h4 class="mb-4">Weather Information for <%= city %></h4>
+
+                <!-- Weather information card -->
+                <div class="mx-auto row mb-3" style="width: 40em; background-color: gainsboro; border-radius: .5em;">
+                    <div id="weatherInfo">
+                        <% if (filteredForecast) { %>
+                            <!-- Display specific date and time weather -->
+                            <div>
+                                <h5>Date: <%= date %></h5>
+                                <p><strong>Time:</strong> <%= time %></p>
+                                <p><strong>Temperature:</strong> <%= filteredForecast.temperature %>°C</p>
+                                <p><strong>Condition:</strong> <%= filteredForecast.weathercondition %></p>
+                                <p><strong>Humidity:</strong> <%= filteredForecast.humidity %> %</p>
+                                <p><strong>Wind Speed:</strong> <%= filteredForecast.wind_speed %> kph</p>
+                                <p><strong>Precipitation:</strong> <%= filteredForecast.precipitation %> mm</p>
+                                <img src="<%= filteredForecast.icon_url %>" alt="<%= filteredForecast.weathercondition %>" />
+                            </div>
+                        <% } else if (date) { %>
+                            <!-- Message for unavailable weather -->
+                            <p>The weather for <%= date %> is unavailable. Please check back closer to the date.</p>
+                        <% } else { %>
+                            <!-- Default 3-day forecast -->
+                            <% if (weatherData && weatherData.forecast && weatherData.forecast.forecastday) { %>
+                                <% weatherData.forecast.forecastday.forEach(day => { %>
+                                    <div>
+                                        <h5>Date: <%= day.date %></h5>
+                                        <p><strong>High Temp:</strong> <%= day.day.maxtemp_c %>°C</p>
+                                        <p><strong>Low Temp:</strong> <%= day.day.mintemp_c %>°C</p>
+                                        <p><strong>Condition:</strong> <%= day.day.condition.text %></p>
+                                        <p><strong>Humidity:</strong> <%= day.day.avghumidity %> %</p>
+                                        <img src="<%= day.day.condition.icon %>" alt="<%= day.day.condition.text %>" />
+                                    </div>
+                                    <hr />
+                                <% }) %>
+                            <% } else { %>
+                                <p>No weather data available. Please try selecting a city.</p>
+                            <% } %>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Manual refresh button -->
+                <div class="text-center my-3">
+                    <button id="refreshWeather" class="btn btn-primary">Refresh Weather</button>
+                </div>
+
+                </div> <!-- card-body -->
+                </div> <!-- card -->
+            </main>
+
+            <footer>
+                <%- include('./partials/footer'); %> <!-- Include footer partial -->
+            </footer>
+
+    </div> <!-- container -->
+    
+    <script>
+        // Ensure that city, date, and time are passed correctly from the backend
+        const city = "<%= city %>"; // Get city from query parameter passed to EJS
+        const date = "<%= date || '' %>"; // Get date from query parameter
+        const time = "<%= time || '' %>"; // Get time from query parameter
+
+        // Function to fetch weather data dynamically
+        async function fetchWeather(city, date = '', time = '') {
+            try {
+                const url = `/weather/data?city=${encodeURIComponent(city)}${
+                    date && time ? `&date=${encodeURIComponent(date)}&time=${encodeURIComponent(time)}` : ''
+                }`;
+
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const weatherInfoDiv = document.getElementById('weatherInfo');
+                weatherInfoDiv.innerHTML = ''; // Clear existing weather data
+
+                if (data.success && data.weatherData) {
+                    const forecast = data.weatherData;
+
+                    weatherInfoDiv.innerHTML = `
+                        <div>
+                            <h5>Date: ${date || forecast.forecast_datetime.split(' ')[0]}</h5>
+                            <p><strong>Time:</strong> ${time || forecast.forecast_datetime.split(' ')[1]}</p>
+                            <p><strong>Temperature:</strong> ${forecast.temperature ?? 'N/A'}°C</p>
+                            <p><strong>Condition:</strong> ${forecast.weathercondition ?? 'N/A'}</p>
+                            <p><strong>Humidity:</strong> ${forecast.humidity ?? 'N/A'}%</p>
+                            <p><strong>Wind Speed:</strong> ${forecast.wind_speed ?? 'N/A'} kph</p>
+                            <p><strong>Precipitation:</strong> ${forecast.precipitation ?? 'N/A'} mm</p>
+                            <img src="${forecast.icon_url ?? ''}" alt="${forecast.weathercondition ?? 'N/A'}" />
+                        </div>
+                    `;
+                } else {
+                    weatherInfoDiv.innerHTML = `<p>The weather for ${date} is unavailable. Please check back closer to the date.</p>`;
+                }
+            } catch (error) {
+                console.error('Error fetching weather:', error);
+                document.getElementById('weatherInfo').innerHTML = `<p>Error fetching weather data. Please try again.</p>`;
+            }
+        }
+
+        // Fetch the weather data only once on page load
+        fetchWeather(city, date, time);
+
+        // Set up auto-refresh every 5 seconds for demo purposes
+        setInterval(() => {
+            console.log("Auto-refreshing weather data...");
+            fetchWeather(city, date, time);
+        }, 5000);
+
+        // Manual refresh functionality
+        document.getElementById('refreshWeather').addEventListener('click', () => fetchWeather(city, date, time));
+    </script>
+
+</body>
+</html>

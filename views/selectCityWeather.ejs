@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Select City Weather</title>
+    <%- include('./partials/head'); %>
+</head>
+
+<body>
+	<div class="container">
+               
+	<header>
+		<%- include('./partials/header'); %>
+	</header>
+
+	<main>
+		<!-- Main card for weather information -->
+		<div class="card my-4" style="border: solid blue 1px;">
+
+		<div class="card-body">
+
+			<!-- Navigation tabs -->
+			<ul class="nav nav-tabs mb-1">
+				<li class="nav-item">
+					<a class="nav-link" href="/passenger/dashboard"><span class="px-2">Passenger&nbsp;&nbsp;&nbsp;</span></a>
+				</li>
+				<li class="nav-item">
+					<a class="nav-link" href="/driver/dashboard"><span class="px-2">Driver&nbsp;&nbsp;&nbsp;</span></a>
+				</li>
+                <li class="nav-item">
+					<a class="nav-link active" href="/weather/select"><span class="px-2">Weather&nbsp;&nbsp;&nbsp;</span></a>
+				</li>
+
+				<!-- Logout tab -->
+				<li class="nav-item ms-auto">
+					<a class="nav-link" href="/logout"><span class="px-2">Logout</span></a>
+				</li>
+			</ul>
+
+			<div class="text-end">User Name: <%= locals.username %></div>
+
+			<!-- Inner card for weather data -->
+			<div class="card mx-4 mb-3" style="border: none;">
+
+			<!-- Flash message for success -->
+			<% if (message.message) { %>
+			<div class="alert alert-success">
+				<%= message.message %>
+			</div>
+			<% } %>
+			
+			<!-- Flash message for errors -->
+			<% if (message.error) { %>
+			<div class="alert alert-danger">
+				<%= message.error %>
+			</div>
+			<% } %>
+
+			<!-- System error message -->
+			<% if (typeof error !== 'undefined' && error !== null) { %>
+				<p class="alert alert-danger"><%= error %></p>
+			<% } %>
+			<!------------------------------------------->
+
+
+			<h4 class="mb-4">Select City Weather</h4>
+
+			<form id="cityForm" action="/weather" method="get">
+
+                <!-- City Selection -->
+                <card class="mx-auto row mb-3" style="width: 40em; background-color: gainsboro; border-radius: .5em;">
+                    <div class="col-md-2 px-5 py-3">
+                        <label for="city" class="form-label">City</label>
+                    </div>
+                    <div class="col-md-10 px-5 py-3">
+                        <select class="form-select" tabindex="30" style="width: 11em" id="city" name="city" required>
+                            <option> </option>
+                            <% cities.forEach((city) => { %>
+                                <option value="<%= city.city %>, Ontario, Canada"><%= city.city %></option>
+                            <% }); %>
+                        </select>
+                    </div>
+
+					<!-- Date Selection -->
+					<div class="mx-auto row mb-3" style="width: 40em;">
+						<div class="col-md-2 px-5 py-3">
+							<label for="date" class="form-label">Date</label>
+						</div>
+						<div class="col-md-10 px-5 py-3">
+							<input type="date" id="date" name="date" class="form-control" required>
+						</div>
+					</div>
+
+					<!-- Time Selection -->
+					<div class="mx-auto row mb-3" style="width: 40em;">
+						<div class="col-md-2 px-5 py-3">
+							<label for="time" class="form-label">Time</label>
+						</div>
+						<div class="col-md-10 px-5 py-3">
+							<input type="time" id="time" name="time" class="form-control">
+						</div>
+					</div>
+				</card>
+                <div class="mx-auto text-end" style="width: 40em;">
+                    <button tabindex="60" class="btn btn-primary mx-3" type="submit" id="selectCityButton">Show Weather</button>
+                </div>
+
+            </form>
+
+
+			<!----------------------------------------------------------------------------->
+
+			</div> <!-- inside card -->
+
+		</div> <!-- card-body -->
+		</div> <!-- card -->
+	</main>
+
+	<footer>
+		<%- include('./partials/footer'); %>
+	</footer>
+
+	</div> <!-- container -->
+
+</body>
+
+</html>

@@ -1,0 +1,222 @@
+<!----------------------------------------------------------------------------------------------------------
+	/passenger/confirmed
+	The page is for displaying the confirmed trip bookings of the passenger.
+------------------------------------------------------------------------------------------------------------>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Confirmed Bookings</title>
+    <%- include('./partials/head'); %>
+</head>
+
+<body>
+	<div class="container">
+
+	<header>
+		<%- include('./partials/header'); %>
+	</header>
+
+	<main>
+
+		<!-- <div class="card my-5" style= "border-radius: 1em; background-color: gainsboro;"> -->
+		<div class="card my-4" style="border: solid blue 1px;">
+
+        <!-- div class="card-body py-4 px-4 px-md-5"> -->
+		<div class="card-body">
+
+
+			<ul class="nav nav-tabs mb-1">
+
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><span class="px-2">Passenger</span></a>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item nav-link" href="/passenger/dashboard">Available Trips</a></li>
+						<li><a class="dropdown-item nav-link" href="/passenger/confirmed">Confirmed Bookings</a></li>
+						<li><a class="dropdown-item nav-link" href="/passenger/requests">Requested Bookings</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item nav-link" href="/passenger/request">Request Bookings</a></li>
+					</ul>
+				</li>
+
+				<li class="nav-item">
+					<a class="nav-link" href="/driver/dashboard"><span class="px-2">Driver&nbsp;&nbsp;&nbsp;</span></a>
+				</li>			
+                
+                <li class="nav-item">
+					<a class="nav-link" href="/weather/select"><span class="px-2">Weather&nbsp;&nbsp;&nbsp;</span></a>
+				</li>
+
+				<!-- New tab added to the far right -->
+				<li class="nav-item ms-auto">
+					<a class="nav-link" href="/logout"><span class="px-2">Logout</span></a>
+				</li>
+			</ul>
+
+			<div class="text-end">User Name: <%= locals.username %></div>
+			
+			<!-- this is the inner card -->
+			<div class="card mx-4 mb-3" style="border: none;">
+
+			<!-- message or error message -->
+			<!-- flash message, <%= JSON.stringify(message)  %> -->
+			<% if ( message.message) { %>
+			<div class="alert alert-success">
+				<%= message.message %>
+			</div>
+			<% } %>
+			<% if ( message.error) { %>
+			<div class="alert alert-danger">
+				<%= message.error %>
+			</div>
+			<% } %>
+			<!-- end of flash message -->
+
+			<!-- If it is not redirect, this will work, system error message -->
+			<% if (typeof error !== 'undefined' && error !== null) { %>
+				<p class="alert alert-danger"><%= error %></p>
+			<% } %>
+			<!------------------------------------------->
+
+
+
+			<!-- <h1 class="mb-4">Available Trips</h1> -->
+			<h4 class="mb-4">Confirmed Bookings</h4>
+
+			<!--------------------->
+			<!-- trip list title -->
+			<!--------------------->
+			<ul id="availTripTitle" class="list-group mb-1">
+				<li class="list-group-item bg-secondary text-white">
+					
+					<div class="row">
+						<!-- divide into 3 part, 3, 4, 5 columns width each -->
+
+						<!-- part 1 -->
+						<div class="col-md-3">
+							<div class="row">
+								<!-- divide into 2 parts for date and time -->
+								<div class="col-md-6">
+									Date
+								</div>
+								<div class="col-md-6">
+									Time
+								</div>
+							</div> <!-- row -->
+						</div> <!-- part 1 -->
+
+						<!-- part 2 -->
+						<div class="col-md-4">
+							<div class="row">
+								<!-- divide into 2 parts for From and To -->
+								<div class="col-md-6">
+									From
+								</div>
+								<div class="col-md-6">
+									To
+								</div>
+							</div> <!-- row -->
+						</div> <!-- part 2 -->
+
+						<!-- part 3 -->
+						<div class="col-md-5">
+							<div class="row">
+								<!-- divide into 3 parts for Driver, seats available and seat booking -->
+								<div class="col-md-3">
+									Driver
+								</div>
+								<div class="col-md-4">
+									<div class="text-center">Seats Confirmed</div>
+								</div>
+								<div class="col-md-3">
+									<div class="text-center">Vehicle Type</div>
+								</div>
+								<div class="col-md-2">
+									<div class="text-center">Fee</div>
+								</div>
+
+							</div> <!-- row -->
+						</div> <!-- part 3 -->
+
+					</div> <!-- row -->
+
+				</li>
+			</ul>
+
+			<!-- trip list -->
+			<ul id="availTripList" class="list-group mb-1">
+			<% confirmedBookings.forEach((trip) => { %>
+				<li class="list-group-item">
+					<div class="row">
+						<!-- divide into 3 part, 3, 4, 5 columns width each -->
+
+						<!-- part 1 -->
+						<div class="col-md-3">
+							<div class="row">
+								<!-- divide into 2 parts for date and time -->
+
+								<div class="col-md-6">
+									<%= trip.d_date %>
+								</div>
+								<div class="col-md-6">
+									<%= trip.d_time %>
+								</div>
+							</div> <!-- row -->
+						</div> <!-- part 1 -->
+
+						<!-- part 2 -->
+						<div class="col-md-4">
+							<div class="row">
+								<!-- divide into 2 parts for From and To -->
+								<div class="col-md-6">
+									<%= trip.from_city %>
+								</div>
+								<div class="col-md-6">
+									<%= trip.to_city %>
+								</div>
+							</div> <!-- row -->
+						</div> <!-- part 2 -->
+
+						<!-- part 3 -->
+						<div class="col-md-5">
+							<div class="row">
+								<!-- divide into 3 parts for Driver, seats confirmed, (no dropdown) -->
+								<div class="col-md-3">
+									<%= trip.driver %>
+								</div>
+								<div class="col-md-4">
+									<div class="text-center"><%= trip.seats_taken_sum %></div>
+								</div>
+
+								<div class="col-md-3">
+									<div class="text-center"><%= trip.vehicle_type %></div>
+								</div>
+
+								<div class="col-md-2">
+									<div class="text-center">$ <%= trip.fee %></div>
+								</div>
+
+							</div> <!-- row -->
+						</div> <!-- part 3 -->
+
+					</div> <!-- row -->
+
+				</li>
+
+				<% }); %>
+			</ul>
+
+			</div> <!-- inside card -->
+
+		</div> <!-- card-body -->
+		</div> <!-- card -->
+	</main>
+
+	<footer>
+		<%- include('./partials/footer'); %>
+	</footer>
+
+	</div> <!-- container -->
+
+</body>
+
+</html>

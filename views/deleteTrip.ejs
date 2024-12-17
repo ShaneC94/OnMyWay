@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Delete Trip</title>
+    <%- include('./partials/head'); %>
+</head>
+
+<body>
+	<div class="container">
+
+	<header>
+		<%- include('./partials/header'); %>
+	</header>
+
+	<main>
+
+		<!-- <div class="card my-5" style= "border-radius: 1em; background-color: gainsboro;"> -->
+		<div class="card my-4" style="border: solid blue 1px;">
+
+        <!-- div class="card-body py-4 px-4 px-md-5"> -->
+		<div class="card-body">
+
+		<!-- nav bar -->
+		<ul class="nav nav-tabs">
+		  <li class="nav-item">
+			<a class="nav-link" href="/adminPage"><span class="px-2">Admin&nbsp;&nbsp;&nbsp;</span></a>
+		  </li>
+
+		  <!-- New tab added to the far right -->
+		  <li class="nav-item ms-auto">
+		    <a class="nav-link" href="/logout"><span class="px-2">Logout</span></a>
+		  </li>
+		</ul>
+
+		<div class="text-end">User Name: <%= locals.username %></div>
+
+		<div class="card mx-5 my-5" style="border: none;">
+
+		<!---- Error message, or message ---->
+
+			<!-- message or error message -->
+			<!-- flash message, <%= JSON.stringify(message)  %> -->
+			<% if ( message.message) { %>
+				<div class="alert alert-success">
+					<%= message.message %>
+				</div>
+				<% } %>
+				<% if ( message.error) { %>
+				<div class="alert alert-danger">
+					<%= message.error %>
+				</div>
+				<% } %>
+				<!-- end of flash message -->
+	
+				<!-- If it is not redirect, this will work, system error message -->
+				<% if (typeof error !== 'undefined' && error !== null) { %>
+					<p class="alert alert-danger"><%= error %></p>
+				<% } %>
+				<!------------------------------------------->
+
+		<!-------------------------------------------------->
+
+		<h1 class="mb-4">Sort By</h1>
+
+		<form action="/adminPage/deleteTrip" method="POST">
+
+			<card class="w-75 mx-auto row mb-3" style= "background-color: gainsboro; border-radius: .5em;">
+
+				<div class="px-5 py-3">
+					<div class="row">
+						<div class="col-md-3">
+
+						</div>
+						<div class="col-md-3">
+							<label for="exportDb" class="form-label">Date/Time</label>
+						</div>
+						<div class="col-md-3">
+							<input tabindex="10" type="radio" name="sortBy" id="sortByDate" value="sortByDate"  />
+						</div>
+						<div class="col-md-3">
+
+						</div>
+					</div>
+				</div>
+
+				
+				<div class="px-5 py-3">
+					<div class="row">
+						<div class="col-md-3">
+
+						</div>
+						<div class="col-md-3">
+							<label for="deleteTrip" class="form-label">Origin City</label>
+						</div>
+						<div class="col-md-3">
+							<input tabindex="20" type="radio" name="sortBy" id="sortByFromCity" value="sortByFromCity"   />
+						</div>
+						<div class="col-md-3">
+
+						</div>
+					</div>
+				</div>
+
+
+                <div class="px-5 py-3">
+					<div class="row">
+						<div class="col-md-3">
+
+						</div>
+						<div class="col-md-3">
+							<label for="deleteTrip" class="form-label">Destination City</label>
+						</div>
+						<div class="col-md-3">
+							<input tabindex="20" type="radio" name="sortBy" id="sortByToCity" value="sortByToCity"   />
+						</div>
+						<div class="col-md-3">
+
+						</div>
+					</div>
+				</div>
+
+
+                <div class="px-5 py-3">
+					<div class="row">
+						<div class="col-md-3">
+
+						</div>
+						<div class="col-md-3">
+							<label for="deleteTrip" class="form-label">Driver</label>
+						</div>
+						<div class="col-md-3">
+							<input tabindex="20" type="radio" name="sortBy" id="sortByDriver" value="sortByDriver"   />
+						</div>
+						<div class="col-md-3">
+
+						</div>
+					</div>
+				</div>
+
+
+                <div class="px-5 py-3">
+                    <div class="row">
+                        <div class="col-md-3">
+    
+                        </div>
+                        <div class="col-md-3">
+                            <label for="deleteTrip" class="form-label">Requester</label>
+                        </div>
+                        <div class="col-md-3">
+                            <input tabindex="20" type="radio" name="sortBy" id="sortByRequester" value="sortByRequester"   />
+                        </div>
+                        <div class="col-md-3">
+    
+                        </div>
+                    </div>
+                </div>
+			</card>
+
+			<div class="text-end" style="width: 85%">
+				<button tabindex="30" class="btn btn-primary" type="submit" id="adminActionButton" >Display Trips</button></div>
+			</div>
+
+		</form>
+
+		</card>
+
+    </div> <!-- card-body -->
+    </div> <!-- card -->
+	</main>
+
+	<footer>
+		<%- include('./partials/footer'); %>
+	</footer>
+
+
+	</div> <!-- container -->
+
+</body>
+
+<script>
+	document.getElementById('username').focus();
+</script>
+
+</html>

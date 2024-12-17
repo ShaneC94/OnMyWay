@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Login</title>
+    <%- include('./partials/head'); %>
+</head>
+
+<body>
+	<div class="container">
+
+	<header>
+		<%- include('./partials/header'); %>
+	</header>
+
+	<main>
+
+		<!-- <div class="card my-5" style= "border-radius: 1em; background-color: gainsboro;"> -->
+		<div class="card my-4" style="border: solid blue 1px;">
+
+        <!-- div class="card-body py-4 px-4 px-md-5"> -->
+		<div class="card-body">
+
+		<!-- nav bar -->
+		<ul class="nav nav-tabs">
+
+
+		  <!-- New tab added to the far right -->
+		  <li class="nav-item ms-auto">
+		    <a class="nav-link" href="/logout"><span class="px-2">Logout</span></a>
+		  </li>
+		</ul>
+
+		<div class="text-end">User Name: <%= locals.username %></div>
+
+		<div class="card mx-5 my-5" style="border: none;">
+
+		<!---- Error message, or message ---->
+
+		<% if (typeof error !== 'undefined' && error !== null) { %>
+			<p class="alert alert-danger"><%= error %></p>
+		<% } %>
+		
+		<% if (typeof message !== 'undefined' && message !== null && JSON.stringify(message) != '{}') { %>
+			<p class="alert alert-success"><%= message %>%></p>
+		<% } %>
+
+		<!-------------------------------------------------->
+
+		<h1 class="mb-4">Admin</h1>
+
+		<form action="/adminPage" method="POST">
+
+			<card class="w-75 mx-auto row mb-3" style= "background-color: gainsboro; border-radius: .5em;">
+
+				<!-- Export Table -->
+				<div class="px-5 py-3">
+					<div class="row">
+						<div class="col-md-3">
+
+						</div>
+						<div class="col-md-3">
+							<label for="exportDb" class="form-label">Export Users as CSV</label>
+						</div>
+						<div class="col-md-3">
+							<input tabindex="10" type="radio" name="adminAction" id="exportDb" value="exportDb"  />
+						</div>
+						<div class="col-md-3">
+
+						</div>
+					</div>
+				</div>
+
+				<!-- Delete Trip -->
+				<div class="px-5 py-3">
+					<div class="row">
+						<div class="col-md-3">
+
+						</div>
+						<div class="col-md-3">
+							<label for="deleteTrip" class="form-label">Delete Trip</label>
+						</div>
+						<div class="col-md-3">
+							<input tabindex="20" type="radio" name="adminAction" id="deleteTrip" value="deleteTrip"   />
+						</div>
+						<div class="col-md-3">
+
+						</div>
+					</div>
+				</div>
+
+				<!-- Statistics -->
+				<div class="px-5 py-3">
+					<div class="row">
+						<div class="col-md-3">
+
+						</div>
+						<div class="col-md-3">
+							<label for="statistics" class="form-label">Ride Statistics</label>
+						</div>
+						<div class="col-md-3">
+							<input tabindex="20" type="radio" name="adminAction" id="statistics" value="statistics"   />
+						</div>
+						<div class="col-md-3">
+
+						</div>
+					</div>
+				</div>
+
+			</card>
+
+			<div class="text-end" style="width: 85%">
+				<button tabindex="30" class="btn btn-primary" type="submit" id="adminActionButton" >Admin Action</button></div>
+			</div>
+
+		</form>
+
+		</card>
+
+    </div> <!-- card-body -->
+    </div> <!-- card -->
+	</main>
+
+	<footer>
+		<%- include('./partials/footer'); %>
+	</footer>
+
+
+	</div> <!-- container -->
+
+</body>
+
+<script>
+	document.getElementById('username').focus();
+</script>
+
+</html>

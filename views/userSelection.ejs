@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Role</title>
+    <%- include('./partials/head'); %>
+</head>
+
+<body>
+	<div class="container">
+
+	<header>
+		<%- include('./partials/header'); %>
+	</header>
+
+	<main>
+
+		<!-- <div class="card my-5" style= "border-radius: 1em; background-color: gainsboro;"> -->
+		<div class="card my-4" style="border: solid blue 1px;">
+
+        <!-- div class="card-body py-4 px-4 px-md-5"> -->
+		<div class="card-body">
+
+		<!-- nav bar -->
+		<ul class="nav nav-tabs">
+		  <li class="nav-item">
+			<a class="nav-link active" aria-current="page" href="#"><span class="px-2">Driver or Passenger</span></a>
+		  </li>
+		</ul>
+
+		<div class="text-end">User Name: <%= locals.username %></div>
+		<div class="card mx-5 my-5" style="border: none;">
+		<h1 class="mb-5">Select Driver or Passenger</h1>
+
+		<form action="/user/selectRole" method="POST">
+
+
+			<div class="row g-3 ">
+
+				<div class="col-md-5 text-end">
+					<button class="btn btn-primary" type="submit" name="role" value="passenger">I'm a Passenger</button>
+				</div>
+
+				<div class="col-md-2">
+					<div class="pt-4">&nbsp;</div>
+                </div>
+
+				<div class="col-md-5">
+					<button class="btn btn-primary" type="submit" name="role" value="driver">I'm a Driver</button>
+				</div>
+
+			</div> <!-- row -->
+
+		</form>
+		</card>
+
+    </div> <!-- card-body -->
+    </div> <!-- card -->
+	</main>
+
+	<footer>
+		<%- include('./partials/footer'); %>
+	</footer>
+
+
+	</div> <!-- container -->
+
+</body>
+
+</html>

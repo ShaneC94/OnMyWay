@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Request Bookings for Driver</title>
+    <%- include('./partials/head'); %>
+</head>
+
+<body>
+
+	<script id="feeData" type="application/json">
+		<%- JSON.stringify(feeArray) %>
+	</script>
+
+	<script>
+		const feeArray = JSON.parse(document.getElementById('feeData').textContent);
+	</script>
+	
+	<div class="container">
+
+	<header>
+		<%- include('./partials/header'); %>
+	</header>
+
+	<main>
+
+		<!-- <div class="card my-5" style= "border-radius: 1em; background-color: gainsboro;"> -->
+		<div class="card my-4" style="border: solid blue 1px;">
+
+        <!-- div class="card-body py-4 px-4 px-md-5"> -->
+		<div class="card-body">
+
+			<ul class="nav nav-tabs mb-1">
+				<li class="nav-item">
+					<a class="nav-link" href="/passenger/dashboard"><span class="px-2">Passenger&nbsp;&nbsp;&nbsp;</span></a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle active" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false"><span class="px-2">Driver</span></a>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item nav-link" href="/driver/dashboard">Available Trips for Driver</a></li>
+						<li><a class="dropdown-item nav-link" href="/driver/confirmed">Confirmed Bookings for Driver</a></li>
+						<li><a class="dropdown-item nav-link" href="/driver/requests">Requested Bookings for Driver</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item nav-link" href="/driver/request">Request Bookings for Driver</a></li>
+					</ul>
+				</li>
+                
+                <li class="nav-item">
+					<a class="nav-link" href="/weather/select"><span class="px-2">Weather&nbsp;&nbsp;&nbsp;</span></a>
+				</li>
+
+				<!-- New tab added to the far right -->
+				<li class="nav-item ms-auto">
+					<a class="nav-link" href="/logout"><span class="px-2">Logout</span></a>
+				</li>
+			</ul>
+
+			<div class="text-end">User Name: <%= locals.username %></div>
+			
+			<!-- this is the inner card -->
+			<div class="card mx-4 mb-3" style="border: none;">
+
+			<!-- message or error message -->
+			<!-- flash message, <%= JSON.stringify(message)  %> -->
+			<% if ( message.message) { %>
+			<div class="alert alert-success">
+				<%= message.message %>
+			</div>
+			<% } %>
+			<% if ( message.error) { %>
+			<div class="alert alert-danger">
+				<%= message.error %>
+			</div>
+			<% } %>
+			<!-- end of flash message -->
+
+			<!-- If it is not redirect, this will work, system error message -->
+			<% if (typeof error !== 'undefined' && error !== null) { %>
+				<p class="alert alert-danger"><%= error %></p>
+			<% } %>
+			<!------------------------------------------->
+
+
+			<h4 class="mb-4">Request Bookings for Driver</h4>
+
+			<form action="/driver/request" method="POST">
+
+				<card class="mx-auto row mb-3" style="width: 40em; background-color: gainsboro; border-radius: .5em;">
+					<div class="col-md-6 px-5 py-3">
+						<label for="inputDate" class="form-label">Date</label>
+						<input tabindex="10" type="date" class="form-control" style="width: 11em" id="inputDate" name="inputDate" required="yes" >
+					</div>
+					<div class="col-md-6 px-5 py-3">
+						<label for="inputTime" class="form-label">Time</label>
+						<input tabindex="20" type="time" class="form-control" style="width: 11em" id="inputTime" name="inputTime" required="yes" >
+					</div>
+				</card>
+
+				<card class="mx-auto row mb-3" style="width: 40em; background-color: gainsboro; border-radius: .5em;">
+					<div class="col-md-6 px-5 py-3">
+						<label for="inputFrom" class="form-label">From</label>
+						<select class="form-select" tabindex="30" style="width: 11em" id="inputFrom" name="inputFrom" required="yes" onchange="updateFee()">
+							<option> </option>
+							<!-- city dropdown list -->
+							<% cities.forEach( (city) => { %>
+							<option value='<%= city.id %>'><%= city.city %></option>
+							<% } );%>
+						</select>
+					</div>
+					<div class="col-md-6 px-5 py-3">
+						<label for="inputTo" class="form-label">To</label>
+						<select class="form-select" tabindex="40" style="width: 11em" id="inputTo" name="inputTo" required="yes" onchange="updateFee()">
+							<option> </option>
+							<!-- city dropdown list -->
+							<% cities.forEach( (city) => { %>
+							<option value='<%= city.id %>'><%= city.city %></option>
+							<% } );%>
+						</select>
+					</div>
+				</card>
+
+				<card class="mx-auto row mb-3" style="width: 40em; background-color: gainsboro; border-radius: .5em;">
+					<div class="col-md-3 px-5 py-3">
+						<label for="inputSeats" class="form-label">Seats</label>
+						<select class="form-select" style="width: 5em" tabindex="50"  id="inputSeats" name="inputSeats" required="yes" >
+										<option> </option>
+										<option value='1'>&nbsp;&nbsp;1</option>
+										<option value='2'>&nbsp;&nbsp;2</option>
+										<option value='3'>&nbsp;&nbsp;3</option>
+										<option value='4'>&nbsp;&nbsp;4</option>
+						</select>
+					</div>
+					<div class="col-md-5 px-5 py-3">
+						<label for="vehicleType" class="form-label">Select Vehicle Type</label>
+						<select class="form-select" style="width: 10em" tabindex="60"  id="vehicleType" name="vehicleType" required="yes" >
+							<option value=""> </option>
+							<% vehicleTypes.forEach(vehicle => { %>
+								<option value="<%= vehicle.id %>"><%= vehicle.vehicle_type %></option>
+							<% }) %>
+						</select>
+					</div>
+
+					<div class="col-md-4 px-5 py-3">
+						<label for="vehicleType" class="form-label">Fee</label>
+
+						<!-- Visible input for display -->
+						<input tabindex="70" type="text" class="form-control" style="width: 8em" id="feeDisplay" name="feeDisplay" readonly>
+
+						<!-- Hidden input to store raw fee value -->
+						<input type="hidden" id="fee" name="fee">
+					</div>
+
+				</card>
+
+				<div class="mx-auto text-end" style="width: 40em;">
+					<button tabindex="100" class="btn btn-primary mx-3" type="submit" id="selectTripButton" >Request</button>
+				</div>
+
+			</form>
+
+			<!----------------------------------------------------------------------------->
+
+			</div> <!-- inside card -->
+
+		</div> <!-- card-body -->
+		</div> <!-- card -->
+	</main>
+
+	<footer>
+		<%- include('./partials/footer'); %>
+	</footer>
+
+	</div> <!-- container -->
+
+
+<script>
+
+    function updateFee() {
+
+        const fromCity = document.getElementById("inputFrom").value;
+        const toCity = document.getElementById("inputTo").value;
+
+        // Reset fee text field
+        document.getElementById("fee").value = "";
+        document.getElementById("feeDisplay").value = "";
+
+        // Check if both cities are selected
+        if (!fromCity || !toCity) return;
+
+        // Check if the cities are the same
+        if (fromCity === toCity) {
+            alert("The cities cannot be the same.");
+			document.getElementById("inputTo").value ="";
+            return;
+        }
+
+        // Find and display the fee
+        const fee = feeArray[fromCity][toCity];
+
+		if (fee)
+		{
+    		document.getElementById("feeDisplay").value = `$${fee}`; // Show fee with $
+    		document.getElementById("fee").value = fee; // Send raw fee
+		} else
+		{
+    		document.getElementById("feeDisplay").value = "Fee not available";
+    		document.getElementById("fee").value = ""; // Clear raw fee
+		}
+
+    }
+</script>
+
+</body>
+
+</html>

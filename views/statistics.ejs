@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Statistics</title>
+    <%- include('./partials/head'); %>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <header>
+            <%- include('./partials/header'); %>
+        </header>
+
+        <main>
+            <div class="card my-4" style="border: solid blue 1px;">
+                <div class="card-body">
+					<ul class="nav nav-tabs mb-1">
+						<li class="nav-item">
+							<a class="nav-link" href="/adminPage"><span class="px-2">Admin&nbsp;&nbsp;&nbsp;</span></a>
+						</li>
+		
+						<!-- New tab added to the far right -->
+						<li class="nav-item ms-auto">
+							<a class="nav-link" href="/logout"><span class="px-2">Logout</span></a>
+						</li>
+					</ul>
+
+                    <div class="text-end">User Name: <%= locals.username %></div>
+
+                    <div class="card mx-5 my-5" style="border: none;">
+
+                        <!-- Chart -->
+                        <h1 class="mb-4">Destination Statistics</h1>
+                        <canvas id="myChart" width="400" height="200"></canvas>
+
+                        <script>
+                            // Embed server-side data into the script
+                            const cities = <%- JSON.stringify(cityCount[0].map(city => city.city)) %>;
+                            const count = <%- JSON.stringify(cityCount[0].map(city => city.count)) %>;
+
+                            var ctx = document.getElementById('myChart').getContext('2d');
+                            var myChart = new Chart(ctx, {
+                                type: 'bar',
+                                data: {
+                                    labels: cities,
+                                    datasets: [{
+                                        label: '# of Trips',
+                                        data: count,
+                                        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                                        borderColor: 'rgba(54, 162, 235, 1)',
+                                        borderWidth: 1
+                                    }]
+                                },
+                                options: {
+                                    scales: {
+                                        y: {
+                                            beginAtZero: true,
+											ticks: {
+												stepSize: 1,
+												callback: function(value, index, values) {
+													return value % 1 === 0 ? value : ''; // Remove decimals
+												}
+											}
+                                        }
+                                    }
+                                }
+                            });
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <%- include('./partials/footer'); %>
+        </footer>
+    </div>
+</body>
+</html>
